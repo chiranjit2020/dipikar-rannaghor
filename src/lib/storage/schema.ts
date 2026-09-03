@@ -30,24 +30,33 @@ export const DEFAULT_SETTINGS: Settings = {
   platformCommissionPct: 22,
 };
 
-/** Storage keys — namespaced so a future multi-tenant Supabase row maps cleanly. */
+/**
+ * Bare storage keys. The adapter prepends a scope prefix:
+ *  - `dr.`            — legacy / single-user (backwards compatible)
+ *  - `dr.u.<userId>.` — a per-user workspace (temporary login wrapper)
+ */
 export const KEYS = {
-  taskOverrides: 'dr.taskOverrides',
-  customTasks: 'dr.customTasks',
-  checklist: 'dr.checklistState',
-  docProgress: 'dr.docProgress',
-  decisions: 'dr.decisions',
-  settings: 'dr.settings',
-  calculators: 'dr.calculators',
-  ingredients: 'dr.ingredients',
-  suppliers: 'dr.suppliers',
-  recipes: 'dr.recipes',
-  dailyLogs: 'dr.dailyLogs',
-  expenses: 'dr.expenses',
-  stockMoves: 'dr.stockMoves',
+  taskOverrides: 'taskOverrides',
+  customTasks: 'customTasks',
+  checklist: 'checklistState',
+  docProgress: 'docProgress',
+  decisions: 'decisions',
+  calculators: 'calculators',
+  ingredients: 'ingredients',
+  suppliers: 'suppliers',
+  recipes: 'recipes',
+  dailyLogs: 'dailyLogs',
+  expenses: 'expenses',
+  stockMoves: 'stockMoves',
 } as const;
 
-/** Maps a CollectionKey to its localStorage key. */
+/**
+ * Theme / density live here, unscoped — they are a device preference, not
+ * workspace data, and the pre-paint script in index.html reads this key.
+ */
+export const GLOBAL_SETTINGS_KEY = 'dr.settings';
+
+/** Maps a CollectionKey to its (bare) storage key. */
 export const COLLECTION_KEYS = {
   ingredients: KEYS.ingredients,
   suppliers: KEYS.suppliers,
@@ -57,4 +66,7 @@ export const COLLECTION_KEYS = {
   stockMoves: KEYS.stockMoves,
 } as const;
 
-export const SCHEMA_VERSION = 3;
+/** The keys migrated from a legacy `dr.*` layout into a user's first workspace. */
+export const MIGRATABLE_KEYS = Object.values(KEYS);
+
+export const SCHEMA_VERSION = 4;

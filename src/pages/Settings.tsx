@@ -2,17 +2,18 @@ import { useRef, useState } from 'react';
 
 import { PageHeader } from '../components/PageHeader';
 import { IconDownload, IconUpload } from '../components/icons';
-import { getStorage } from '../lib/storage';
+import { useAuth } from '../lib/auth';
 import { useProgress, useStore } from '../lib/store';
 
 export function Settings() {
-  const { storageName, settings, setSettings, refresh } = useStore();
+  const { storageName, settings, setSettings, exportAll, importAll, clearAll } = useStore();
+  const { user, logout } = useAuth();
   const progress = useProgress();
   const fileRef = useRef<HTMLInputElement>(null);
   const [msg, setMsg] = useState<string | null>(null);
 
   async function doExport() {
-    const data = await getStorage().exportAll();
+    const data = await exportAll();
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -26,8 +27,7 @@ export function Settings() {
   async function doImport(file: File) {
     try {
       const data = JSON.parse(await file.text());
-      await getStorage().importAll(data);
-      await refresh();
+      await importAll(data);
       setMsg('Backup import হয়েছে।');
     } catch {
       setMsg('Import ব্যর্থ — ফাইলটি সঠিক backup কিনা দেখো।');
@@ -35,15 +35,31 @@ export function Settings() {
   }
 
   async function doClear() {
-    if (!confirm('সব local data মুছে যাবে (task status, checklist, notes, decisions)। নিশ্চিত?')) return;
-    await getStorage().clearAll();
-    await refresh();
-    setMsg('সব local data মুছে ফেলা হয়েছে।');
+    if (!confirm('এই workspace-এর সব data মুছে যাবে (task status, checklist, notes, decisions, recipes…)। নিশ্চিত?'))
+      return;
+    await clearAll();
+    setMsg('এই workspace-এর সব data মুছে ফেলা হয়েছে।');
   }
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Settings" subtitle="Data, backup ও preferences।" />
+      <PageHeader title="Settings" subtitle="Account, data, backup ও preferences।" />
+
+      {user && (
+        <section className="card p-5">
+          <h2 className="text-base font-medium text-ink">Account</h2>
+          <p className="mt-1 text-sm text-ink-muted">
+            Logged in as <span className="text-ink-soft">{user.username}</span> ·{' '}
+            <span className="text-ink-soft">{user.businessName}</span>
+          </p>
+          <p className="mt-2 rounded-lg border border-warn/25 bg-warn/[0.07] px-3 py-2 text-xs text-warn">
+            ⚠ Temporary local login for testing only — not secure auth.
+          </p>
+          <button className="btn-ghost mt-3" onClick={logout}>
+            Log out
+          </button>
+        </section>
+      )}
 
       <section className="card p-5">
         <h2 className="text-base font-medium text-ink">Storage</h2>

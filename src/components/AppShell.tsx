@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 
+import { useAuth } from '../lib/auth';
 import { useCurrentPhase, useProgress, useStore } from '../lib/store';
 import { Brand } from './Brand';
 import { ProgressBar } from './ProgressRing';
@@ -20,6 +21,32 @@ function ThemeToggle() {
     >
       {dark ? <IconSun className="h-[18px] w-[18px]" /> : <IconMoon className="h-[18px] w-[18px]" />}
     </button>
+  );
+}
+
+function AccountBar({ compact = false }: { compact?: boolean }) {
+  const { user, logout } = useAuth();
+  if (!user) return null;
+  return (
+    <div
+      className={`flex items-center gap-2 rounded-xl border border-hairline bg-tint/[0.02] px-3 py-2 ${
+        compact ? '' : 'text-sm'
+      }`}
+    >
+      <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-saffron/15 text-xs font-semibold text-saffron-soft">
+        {user.businessName.slice(0, 1).toUpperCase()}
+      </span>
+      <span className="min-w-0 flex-1 leading-tight">
+        <span className="block truncate text-sm font-medium text-ink">{user.businessName}</span>
+        <span className="block truncate text-[0.7rem] text-ink-muted">@{user.username}</span>
+      </span>
+      <button
+        onClick={logout}
+        className="shrink-0 rounded-lg px-2 py-1 text-xs text-ink-muted hover:bg-tint/5 hover:text-ink"
+      >
+        Log out
+      </button>
+    </div>
   );
 }
 
@@ -84,6 +111,10 @@ function DesktopSidebar() {
           </div>
         </div>
       </div>
+
+      <div className="mx-3 mb-3">
+        <AccountBar />
+      </div>
     </aside>
   );
 }
@@ -99,6 +130,7 @@ function MoreSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
         </button>
       </div>
       <nav className="flex-1 space-y-5 overflow-y-auto p-4">
+        <AccountBar />
         {NAV_GROUPS.map((g) => (
           <div key={g}>
             <p className="section-title mb-2">{g}</p>

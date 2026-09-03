@@ -73,6 +73,10 @@ interface StoreValue {
   saveItems: <T extends { id: string }>(key: CollectionKey, items: T[]) => Promise<void>;
   deleteItem: (key: CollectionKey, id: string) => Promise<void>;
 
+  exportAll: () => Promise<Record<string, unknown>>;
+  importAll: (data: Record<string, unknown>) => Promise<void>;
+  clearAll: () => Promise<void>;
+
   refresh: () => Promise<void>;
 }
 
@@ -92,8 +96,14 @@ function mergeTasks(overrides: TaskOverrideMap, custom: TaskSeed[]): Task[] {
   return [...base, ...customTasks];
 }
 
-export function StoreProvider({ children }: { children: ReactNode }) {
-  const storage = useMemo(() => getStorage(), []);
+export function StoreProvider({
+  scope = 'dr.',
+  children,
+}: {
+  scope?: string;
+  children: ReactNode;
+}) {
+  const storage = useMemo(() => getStorage(scope), [scope]);
   const [ready, setReady] = useState(false);
   const [overrides, setOverrides] = useState<TaskOverrideMap>({});
   const [custom, setCustom] = useState<TaskSeed[]>([]);
@@ -331,6 +341,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     saveItem,
     saveItems,
     deleteItem,
+    exportAll: () => storage.exportAll(),
+    importAll: async (data) => {
+      await storage.importAll(data);
+      await refresh();
+    },
+    clearAll: async () => {
+      await storage.clearAll();
+      await refresh();
+    },
     refresh,
   };
 
