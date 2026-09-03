@@ -1,12 +1,27 @@
 import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 
-import { useCurrentPhase, useProgress } from '../lib/store';
+import { useCurrentPhase, useProgress, useStore } from '../lib/store';
 import { Brand } from './Brand';
 import { ProgressBar } from './ProgressRing';
 import { SearchModal } from './SearchModal';
 import { MOBILE_NAV, NAV, NAV_GROUPS } from './nav';
-import { IconClose, IconGrid, IconSearch } from './icons';
+import { IconClose, IconGrid, IconMoon, IconSearch, IconSun } from './icons';
+
+function ThemeToggle() {
+  const { settings, setSettings } = useStore();
+  const dark = settings.theme !== 'light';
+  return (
+    <button
+      onClick={() => void setSettings({ theme: dark ? 'light' : 'dark' })}
+      className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-hairline bg-surface-2/60 text-ink-muted transition-colors hover:border-tint/15 hover:text-ink"
+      aria-label={dark ? 'Switch to light theme' : 'Switch to dark theme'}
+      title={dark ? 'Light theme' : 'Dark theme'}
+    >
+      {dark ? <IconSun className="h-[18px] w-[18px]" /> : <IconMoon className="h-[18px] w-[18px]" />}
+    </button>
+  );
+}
 
 function DesktopSidebar() {
   const progress = useProgress();
@@ -176,16 +191,19 @@ export function AppShell() {
             <Brand compact />
           </div>
           <span className="hidden text-sm font-medium text-ink-soft lg:block">{title}</span>
-          <button
-            onClick={() => setSearchOpen(true)}
-            className="ml-auto flex items-center gap-2.5 rounded-xl border border-hairline bg-surface-2/60 px-3.5 py-2 text-sm text-ink-muted transition-colors hover:border-tint/15 hover:text-ink-soft"
-          >
-            <IconSearch className="h-[18px] w-[18px]" />
-            <span className="hidden sm:inline">Search…</span>
-            <kbd className="hidden rounded-md border border-hairline px-1.5 text-[0.7rem] md:inline">
-              Ctrl K
-            </kbd>
-          </button>
+          <div className="ml-auto flex items-center gap-2">
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="flex items-center gap-2.5 rounded-xl border border-hairline bg-surface-2/60 px-3.5 py-2 text-sm text-ink-muted transition-colors hover:border-tint/15 hover:text-ink-soft"
+            >
+              <IconSearch className="h-[18px] w-[18px]" />
+              <span className="hidden sm:inline">Search…</span>
+              <kbd className="hidden rounded-md border border-hairline px-1.5 text-[0.7rem] md:inline">
+                Ctrl K
+              </kbd>
+            </button>
+            <ThemeToggle />
+          </div>
         </div>
       </header>
 
