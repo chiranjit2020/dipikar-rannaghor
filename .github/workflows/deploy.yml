@@ -23,6 +23,11 @@ jobs:
         with:
           node-version: 22
           cache: npm
+      # Enables Pages and switches its source to "GitHub Actions" if it
+      # is currently unset or on "Deploy from a branch".
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - run: npm ci
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
