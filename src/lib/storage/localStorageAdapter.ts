@@ -4,6 +4,7 @@ import {
   DEFAULT_SETTINGS,
   KEYS,
   SCHEMA_VERSION,
+  type CalculatorState,
   type ChecklistState,
   type DecisionEntry,
   type DocProgressMap,
@@ -110,6 +111,16 @@ export class LocalStorageAdapter implements StorageAdapter {
     write(KEYS.settings, { ...(await this.getSettings()), ...patch });
   }
 
+  async getCalculatorState(): Promise<CalculatorState> {
+    return read<CalculatorState>(KEYS.calculators, {});
+  }
+
+  async setCalculatorState(id: string, value: unknown): Promise<void> {
+    const all = await this.getCalculatorState();
+    all[id] = value;
+    write(KEYS.calculators, all);
+  }
+
   async exportAll(): Promise<Record<string, unknown>> {
     return {
       schemaVersion: SCHEMA_VERSION,
@@ -120,6 +131,7 @@ export class LocalStorageAdapter implements StorageAdapter {
       docProgress: await this.getDocProgress(),
       decisions: await this.getDecisions(),
       settings: await this.getSettings(),
+      calculators: await this.getCalculatorState(),
     };
   }
 
@@ -130,6 +142,7 @@ export class LocalStorageAdapter implements StorageAdapter {
     if (data.docProgress) write(KEYS.docProgress, data.docProgress);
     if (data.decisions) write(KEYS.decisions, data.decisions);
     if (data.settings) write(KEYS.settings, data.settings);
+    if (data.calculators) write(KEYS.calculators, data.calculators);
   }
 
   async clearAll(): Promise<void> {

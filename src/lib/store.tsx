@@ -23,6 +23,7 @@ import { pct } from './format';
 import {
   DEFAULT_SETTINGS,
   getStorage,
+  type CalculatorState,
   type ChecklistState,
   type DocProgressMap,
   type Settings,
@@ -52,6 +53,9 @@ interface StoreValue {
   settings: Settings;
   setSettings: (patch: Partial<Settings>) => Promise<void>;
 
+  calculatorState: CalculatorState;
+  setCalculatorState: (id: string, value: unknown) => Promise<void>;
+
   refresh: () => Promise<void>;
 }
 
@@ -80,15 +84,17 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [docProgress, setDocProgress] = useState<DocProgressMap>({});
   const [decisions, setDecisions] = useState<DecisionEntry[]>([]);
   const [settings, setSettingsState] = useState<Settings>(DEFAULT_SETTINGS);
+  const [calculatorState, setCalcState] = useState<CalculatorState>({});
 
   const refresh = useCallback(async () => {
-    const [ov, cu, cl, dp, de, se] = await Promise.all([
+    const [ov, cu, cl, dp, de, se, ca] = await Promise.all([
       storage.getTaskOverrides(),
       storage.getCustomTasks(),
       storage.getChecklistState(),
       storage.getDocProgress(),
       storage.getDecisions(),
       storage.getSettings(),
+      storage.getCalculatorState(),
     ]);
     setOverrides(ov);
     setCustom(cu);
@@ -96,6 +102,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setDocProgress(dp);
     setDecisions(de);
     setSettingsState(se);
+    setCalcState(ca);
     setReady(true);
   }, [storage]);
 
@@ -200,6 +207,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [storage],
   );
 
+  const setCalculatorState = useCallback<StoreValue['setCalculatorState']>(
+    async (id, value) => {
+      setCalcState((s) => ({ ...s, [id]: value }));
+      await storage.setCalculatorState(id, value);
+    },
+    [storage],
+  );
+
   const value: StoreValue = {
     ready,
     storageName: storage.name,
@@ -217,6 +232,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     deleteDecision,
     settings,
     setSettings,
+    calculatorState,
+    setCalculatorState,
     refresh,
   };
 

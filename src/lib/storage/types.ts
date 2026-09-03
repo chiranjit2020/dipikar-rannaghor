@@ -1,4 +1,5 @@
 import type {
+  CalculatorState,
   ChecklistState,
   DecisionEntry,
   Settings,
@@ -35,6 +36,9 @@ export interface StorageAdapter {
 
   getSettings(): Promise<Settings>;
   setSettings(patch: Partial<Settings>): Promise<void>;
+
+  getCalculatorState(): Promise<CalculatorState>;
+  setCalculatorState(id: string, value: unknown): Promise<void>;
 
   /** Full export/import for backup + future migration to the cloud. */
   exportAll(): Promise<Record<string, unknown>>;

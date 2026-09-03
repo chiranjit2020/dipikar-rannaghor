@@ -13,7 +13,7 @@ import type { Category, Difficulty } from '../types';
 
 const CATEGORIES: Category[] = [
   'Foundation', 'Market Research', 'Location & Kitchen', 'Legal & Compliance',
-  'Menu', 'Finance', 'Operations',
+  'Equipment', 'Menu', 'Finance', 'Operations', 'Marketing', 'Customer',
 ];
 const DIFFICULTY: Difficulty[] = ['beginner', 'intermediate', 'advanced'];
 

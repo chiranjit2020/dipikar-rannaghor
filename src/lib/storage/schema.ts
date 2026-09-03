@@ -10,6 +10,9 @@ export type ChecklistState = Record<string, Record<string, boolean>>;
 /** docId -> { read, readAt } */
 export type DocProgressMap = Record<string, { read: boolean; readAt?: string }>;
 
+/** calculator id -> its serialised input state (shape owned by the page) */
+export type CalculatorState = Record<string, unknown>;
+
 export interface Settings {
   /** 'dark' only for MVP; kept for the future light theme. */
   theme: 'dark' | 'light';
@@ -32,6 +35,7 @@ export const KEYS = {
   docProgress: 'dr.docProgress',
   decisions: 'dr.decisions',
   settings: 'dr.settings',
+  calculators: 'dr.calculators',
 } as const;
 
 export const SCHEMA_VERSION = 1;
