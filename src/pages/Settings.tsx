@@ -105,18 +105,30 @@ export function Settings() {
             className="field w-24"
           />
         </label>
+        <div className="mt-3 flex items-center justify-between gap-4 text-sm">
+          <span className="text-ink-soft">Theme</span>
+          <div className="flex gap-1.5">
+            {(['dark', 'light'] as const).map((t) => (
+              <button
+                key={t}
+                onClick={() => void setSettings({ theme: t })}
+                className={`chip ${settings.theme === t ? 'chip-active' : 'hover:text-ink'}`}
+              >
+                {t === 'dark' ? 'Dark' : 'Light'}
+              </button>
+            ))}
+          </div>
+        </div>
         <label className="mt-3 flex items-center justify-between gap-4 text-sm">
-          <span className="text-ink-soft">Compact spacing</span>
+          <span className="text-ink-soft">
+            Compact density <span className="text-ink-muted">(ছোট text ও spacing)</span>
+          </span>
           <input
             type="checkbox"
             checked={settings.compact}
             onChange={(e) => void setSettings({ compact: e.target.checked })}
             className="h-4 w-4 accent-saffron"
           />
-        </label>
-        <label className="mt-3 flex items-center justify-between gap-4 text-sm opacity-60">
-          <span className="text-ink-soft">Light theme <span className="text-ink-muted">(V2-তে আসছে)</span></span>
-          <input type="checkbox" disabled className="h-4 w-4 accent-saffron" />
         </label>
       </section>
 
@@ -125,7 +137,7 @@ export function Settings() {
       )}
 
       <p className="text-center text-xs text-ink-muted">
-        Dipikar Rannghor · V1 (Documentation + TODO PWA) · GitHub Pages + localStorage
+        Dipikar Rannghor · GitHub Pages + localStorage · architected for Supabase
       </p>
     </div>
   );

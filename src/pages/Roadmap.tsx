@@ -7,7 +7,7 @@ import { usePhaseProgress, useCurrentPhase } from '../lib/store';
 const STATUS_STYLE = {
   current: 'border-saffron/50 bg-saffron/10 text-saffron-soft',
   next: 'border-info/40 bg-info/10 text-info',
-  planned: 'border-white/10 bg-white/[0.03] text-ink-muted',
+  planned: 'border-tint/10 bg-tint/[0.03] text-ink-muted',
 } as const;
 
 export function Roadmap() {
@@ -34,7 +34,7 @@ export function Roadmap() {
                       ? 'border-good bg-good/30'
                       : isCurrent
                         ? 'border-saffron bg-saffron/30'
-                        : 'border-white/15 bg-surface'
+                        : 'border-tint/15 bg-surface'
                   }`}
                 />
                 <div className="flex items-center gap-2">

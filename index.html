@@ -15,6 +15,16 @@
       content="Dipikar Rannghor — hands-on Cloud Kitchen documentation, checklists and TODO tracker."
     />
     <title>Dipikar Rannghor</title>
+    <script>
+      // Apply saved theme + density before first paint (no flash).
+      try {
+        var s = JSON.parse(localStorage.getItem('dr.settings') || '{}');
+        var root = document.documentElement;
+        if (s.theme === 'light') root.classList.remove('dark');
+        else root.classList.add('dark');
+        if (s.compact) root.setAttribute('data-compact', '');
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

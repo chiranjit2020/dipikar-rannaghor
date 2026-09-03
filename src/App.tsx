@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import { AppShell } from './components/AppShell';
@@ -23,6 +24,20 @@ import { Settings } from './pages/Settings';
 import { Suppliers } from './pages/Suppliers';
 import { Todos } from './pages/Todos';
 
+/** Reflects the theme + density settings onto <html>. */
+function ThemeEffect() {
+  const { settings } = useStore();
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.toggle('dark', settings.theme !== 'light');
+    if (settings.compact) root.setAttribute('data-compact', '');
+    else root.removeAttribute('data-compact');
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', settings.theme === 'light' ? '#fafaf9' : '#0b0b0f');
+  }, [settings.theme, settings.compact]);
+  return null;
+}
+
 function Gate({ children }: { children: React.ReactNode }) {
   const { ready } = useStore();
   if (!ready) {
@@ -38,6 +53,7 @@ function Gate({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <StoreProvider>
+      <ThemeEffect />
       <Gate>
         <HashRouter>
           <Routes>

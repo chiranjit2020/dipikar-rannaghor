@@ -1,7 +1,7 @@
 export function Brand({ compact = false }: { compact?: boolean }) {
   return (
     <div className="flex items-center gap-2.5">
-      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-saffron-soft to-saffron-deep text-lg shadow-glow">
+      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-[#ffb84d] to-saffron-deep text-lg shadow-glow">
         🍚
       </span>
       {!compact && (

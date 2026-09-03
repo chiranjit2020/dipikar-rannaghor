@@ -78,7 +78,7 @@ export function Ingredients() {
             onChange={(e) => setQ(e.target.value)}
           />
 
-          <div className="card divide-y divide-white/5">
+          <div className="card divide-y divide-tint/5">
             <div className="hidden grid-cols-[1fr_5.5rem_6rem_9rem_2rem] gap-3 px-4 py-2 text-[0.7rem] uppercase tracking-wider text-ink-muted sm:grid">
               <span>Name</span><span>Unit</span><span>₹ / unit</span><span>Supplier</span><span />
             </div>

@@ -30,12 +30,12 @@ export function Checklists() {
                 <ProgressBar value={percentage} tone={percentage === 100 ? 'good' : 'saffron'} />
               </div>
             </div>
-            <ul className="divide-y divide-white/5">
+            <ul className="divide-y divide-tint/5">
               {c.items.map((item) => {
                 const checked = !!st[item.id];
                 return (
                   <li key={item.id}>
-                    <label className="flex cursor-pointer items-start gap-3 px-5 py-3 transition-colors hover:bg-white/[0.02]">
+                    <label className="flex cursor-pointer items-start gap-3 px-5 py-3 transition-colors hover:bg-tint/[0.02]">
                       <input
                         type="checkbox"
                         checked={checked}

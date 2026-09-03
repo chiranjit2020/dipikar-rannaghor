@@ -8,12 +8,57 @@
 @tailwind utilities;
 
 @layer base {
+  /* ---- Light theme (default) ---- */
   :root {
+    color-scheme: light;
+
+    --c-base: 250 250 249;
+    --c-surface: 255 255 255;
+    --c-surface-2: 245 245 244;
+    --c-surface-3: 235 235 233;
+    --c-ink: 24 24 27;
+    --c-ink-soft: 63 63 70;
+    --c-ink-muted: 113 113 122;
+    --c-tint: 24 24 27; /* black-ish overlay on light */
+    --c-saffron-soft: 180 83 9; /* readable amber for text */
+
+    --hairline: rgba(24, 24, 27, 0.1);
+    --shadow-card: 0 1px 2px rgba(24, 24, 27, 0.04), 0 8px 24px -14px rgba(24, 24, 27, 0.18);
+    --scrollbar-thumb: rgba(24, 24, 27, 0.2);
+    --page-glow:
+      radial-gradient(60rem 60rem at 110% -10%, rgba(245, 166, 35, 0.1), transparent 60%),
+      radial-gradient(50rem 50rem at -10% 0%, rgba(96, 165, 250, 0.08), transparent 55%);
+  }
+
+  /* ---- Dark theme ---- */
+  :root.dark {
     color-scheme: dark;
+
+    --c-base: 11 11 15;
+    --c-surface: 20 20 25;
+    --c-surface-2: 27 27 34;
+    --c-surface-3: 35 35 44;
+    --c-ink: 244 244 245;
+    --c-ink-soft: 161 161 170;
+    --c-ink-muted: 113 113 122;
+    --c-tint: 255 255 255; /* white overlay on dark */
+    --c-saffron-soft: 255 184 77;
+
+    --hairline: rgba(255, 255, 255, 0.08);
+    --shadow-card: 0 1px 0 0 rgba(255, 255, 255, 0.04) inset, 0 8px 30px -12px rgba(0, 0, 0, 0.6);
+    --scrollbar-thumb: rgba(255, 255, 255, 0.13);
+    --page-glow:
+      radial-gradient(60rem 60rem at 110% -10%, rgba(245, 166, 35, 0.06), transparent 60%),
+      radial-gradient(50rem 50rem at -10% 0%, rgba(96, 165, 250, 0.05), transparent 55%);
   }
 
   html {
     -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Compact density — scales the whole rem-based UI down. */
+  html[data-compact] {
+    font-size: 14px;
   }
 
   html,
@@ -23,14 +68,12 @@
 
   body {
     @apply bg-base text-ink font-sans antialiased;
-    background-image:
-      radial-gradient(60rem 60rem at 110% -10%, rgba(245, 166, 35, 0.06), transparent 60%),
-      radial-gradient(50rem 50rem at -10% 0%, rgba(96, 165, 250, 0.05), transparent 55%);
+    background-image: var(--page-glow);
     background-attachment: fixed;
   }
 
   ::selection {
-    @apply bg-saffron/30 text-white;
+    @apply bg-saffron/30 text-ink;
   }
 
   h1, h2, h3, h4 {
@@ -40,14 +83,14 @@
   /* Thin premium scrollbars */
   * {
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+    scrollbar-color: var(--scrollbar-thumb) transparent;
   }
   *::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
   *::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.13);
+    background: var(--scrollbar-thumb);
     border-radius: 999px;
   }
 }
@@ -58,7 +101,7 @@
   }
 
   .card-hover {
-    @apply transition-all duration-200 hover:border-white/15 hover:bg-surface-2/90;
+    @apply transition-all duration-200 hover:border-tint/15 hover:bg-surface-2/90;
   }
 
   .btn {
@@ -67,17 +110,17 @@
       disabled:opacity-40 disabled:pointer-events-none;
   }
   .btn-primary {
-    @apply btn bg-gradient-to-b from-saffron-soft to-saffron text-black shadow-glow hover:brightness-105 active:brightness-95;
+    @apply btn bg-gradient-to-b from-[#ffb84d] to-saffron text-black shadow-glow hover:brightness-105 active:brightness-95;
   }
   .btn-ghost {
-    @apply btn border border-hairline bg-surface-2/70 text-ink-soft hover:text-ink hover:border-white/15;
+    @apply btn border border-hairline bg-surface-2/70 text-ink-soft hover:text-ink hover:border-tint/20;
   }
   .btn-subtle {
-    @apply btn text-ink-soft hover:text-ink hover:bg-white/5;
+    @apply btn text-ink-soft hover:text-ink hover:bg-tint/5;
   }
 
   .chip {
-    @apply inline-flex items-center gap-1.5 rounded-full border border-hairline bg-white/[0.03]
+    @apply inline-flex items-center gap-1.5 rounded-full border border-hairline bg-tint/[0.04]
       px-3 py-1 text-xs font-medium text-ink-soft;
   }
   .chip-active {
@@ -130,10 +173,10 @@
   @apply my-5 rounded-r-xl border-l-2 border-saffron/60 bg-saffron/[0.06] px-4 py-3 text-ink;
 }
 .prose-dr code {
-  @apply rounded-md bg-white/[0.07] px-1.5 py-0.5 text-[0.9em] text-saffron-soft;
+  @apply rounded-md bg-tint/[0.07] px-1.5 py-0.5 text-[0.9em] text-saffron-soft;
 }
 .prose-dr pre {
-  @apply my-5 overflow-x-auto rounded-xl border border-hairline bg-[#0e0e13] p-4 text-sm leading-relaxed;
+  @apply my-5 overflow-x-auto rounded-xl border border-hairline bg-surface-3/70 p-4 text-sm leading-relaxed;
 }
 .prose-dr pre code {
   @apply bg-transparent p-0 text-ink-soft;
@@ -145,7 +188,7 @@
   @apply border-b border-hairline px-3 py-2 text-left font-semibold text-ink;
 }
 .prose-dr td {
-  @apply border-b border-white/5 px-3 py-2 align-top;
+  @apply border-b border-tint/10 px-3 py-2 align-top;
 }
 .prose-dr hr {
   @apply my-8 border-hairline;

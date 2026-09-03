@@ -89,7 +89,7 @@ export function DailyLogPage() {
                 </button>
 
                 {open && (
-                  <div className="space-y-3 border-t border-hairline bg-white/[0.015] p-4">
+                  <div className="space-y-3 border-t border-hairline bg-tint/[0.015] p-4">
                     <label className="block text-xs text-ink-muted">
                       Date
                       <input

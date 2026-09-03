@@ -103,7 +103,7 @@ export function Suppliers() {
                     </thead>
                     <tbody>
                       {rows.map(({ supplier, q }, idx) => (
-                        <tr key={q.id} className="border-t border-white/5">
+                        <tr key={q.id} className="border-t border-tint/5">
                           <td className="py-1.5 pr-3 text-ink-soft">{supplier}</td>
                           <td className={`py-1.5 pr-3 ${idx === 0 ? 'font-semibold text-good' : 'text-ink-soft'}`}>
                             {rupee(q.price)}/{q.unit || 'unit'}
@@ -158,7 +158,7 @@ function SupplierCard({
       </button>
 
       {open && (
-        <div className="space-y-3 border-t border-hairline bg-white/[0.015] p-4">
+        <div className="space-y-3 border-t border-hairline bg-tint/[0.015] p-4">
           <div className="grid gap-2 sm:grid-cols-2">
             <input className="field" placeholder="Supplier নাম" value={s.name} onChange={(e) => set({ name: e.target.value })} />
             <input className="field" placeholder="Contact (phone / person)" value={s.contact ?? ''} onChange={(e) => set({ contact: e.target.value })} />

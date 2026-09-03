@@ -28,7 +28,7 @@ export function Resources() {
               className="card card-hover block p-4"
             >
               <div className="flex items-start gap-3">
-                <span className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-hairline bg-white/[0.03] text-ink-soft">
+                <span className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-hairline bg-tint/[0.03] text-ink-soft">
                   <IconLink className="h-4 w-4" />
                 </span>
                 <div className="min-w-0 flex-1">

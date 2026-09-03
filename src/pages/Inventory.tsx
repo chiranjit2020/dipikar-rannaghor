@@ -72,7 +72,7 @@ export function Inventory() {
       )}
 
       {/* Stock levels */}
-      <section className="card divide-y divide-white/5">
+      <section className="card divide-y divide-tint/5">
         <div className="hidden grid-cols-[1fr_6rem_6rem_5rem] gap-3 px-4 py-2 text-[0.7rem] uppercase tracking-wider text-ink-muted sm:grid">
           <span>Ingredient</span><span>On hand</span><span>Reorder at</span><span>Status</span>
         </div>
@@ -111,7 +111,7 @@ export function Inventory() {
             hint="Purchase, consumption, wastage বা adjustment যোগ করো — on-hand নিজে থেকেই হিসাব হবে।"
           />
         ) : (
-          <div className="card divide-y divide-white/5">
+          <div className="card divide-y divide-tint/5">
             {recentMoves.map((m) => {
               const ing = ingById[m.ingredientId];
               return (

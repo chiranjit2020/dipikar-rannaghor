@@ -109,12 +109,12 @@ export function Expenses() {
             />
           </div>
 
-          <div className="card divide-y divide-white/5">
+          <div className="card divide-y divide-tint/5">
             {filtered.map((e) => (
               <button
                 key={e.id}
                 onClick={() => setEditing(e)}
-                className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-white/[0.02]"
+                className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-tint/[0.02]"
               >
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-1.5">

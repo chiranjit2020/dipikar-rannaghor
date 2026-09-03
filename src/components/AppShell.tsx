@@ -34,7 +34,7 @@ function DesktopSidebar() {
                     `flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-colors ${
                       isActive
                         ? 'bg-saffron/12 text-saffron-soft'
-                        : 'text-ink-soft hover:bg-white/[0.04] hover:text-ink'
+                        : 'text-ink-soft hover:bg-tint/[0.04] hover:text-ink'
                     }`
                   }
                 >
@@ -47,7 +47,7 @@ function DesktopSidebar() {
         ))}
       </nav>
 
-      <div className="m-3 rounded-xl border border-hairline bg-white/[0.02] p-3.5">
+      <div className="m-3 rounded-xl border border-hairline bg-tint/[0.02] p-3.5">
         <p className="text-[0.7rem] uppercase tracking-wider text-ink-muted">Current phase</p>
         <p className="mt-1 text-sm font-medium text-ink">
           {phase.code} — {phase.title}
@@ -178,7 +178,7 @@ export function AppShell() {
           <span className="hidden text-sm font-medium text-ink-soft lg:block">{title}</span>
           <button
             onClick={() => setSearchOpen(true)}
-            className="ml-auto flex items-center gap-2.5 rounded-xl border border-hairline bg-surface-2/60 px-3.5 py-2 text-sm text-ink-muted transition-colors hover:border-white/15 hover:text-ink-soft"
+            className="ml-auto flex items-center gap-2.5 rounded-xl border border-hairline bg-surface-2/60 px-3.5 py-2 text-sm text-ink-muted transition-colors hover:border-tint/15 hover:text-ink-soft"
           >
             <IconSearch className="h-[18px] w-[18px]" />
             <span className="hidden sm:inline">Search…</span>

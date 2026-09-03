@@ -75,7 +75,7 @@ function NumField({
 
 function Result({ label, value, tone }: { label: string; value: string; tone?: string }) {
   return (
-    <div className="rounded-xl border border-hairline bg-white/[0.02] px-4 py-3">
+    <div className="rounded-xl border border-hairline bg-tint/[0.02] px-4 py-3">
       <p className="text-[0.7rem] uppercase tracking-wider text-ink-muted">{label}</p>
       <p className={`mt-0.5 text-xl font-semibold ${tone ?? 'text-ink'}`}>{value}</p>
     </div>

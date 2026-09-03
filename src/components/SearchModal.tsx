@@ -96,7 +96,7 @@ export function SearchModal({ open, onClose }: { open: boolean; onClose: () => v
                 onClose();
               }}
               className={`flex w-full flex-col gap-1 rounded-xl px-3 py-2.5 text-left transition-colors ${
-                i === active ? 'bg-white/[0.06]' : 'hover:bg-white/[0.03]'
+                i === active ? 'bg-tint/[0.06]' : 'hover:bg-tint/[0.03]'
               }`}
             >
               <span className="flex items-center gap-2">

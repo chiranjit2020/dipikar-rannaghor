@@ -11,7 +11,7 @@ export function EmptyState({
 }) {
   return (
     <div className="card flex flex-col items-center gap-2 px-6 py-14 text-center">
-      <div className="grid h-12 w-12 place-items-center rounded-full border border-hairline bg-white/[0.03] text-xl">
+      <div className="grid h-12 w-12 place-items-center rounded-full border border-hairline bg-tint/[0.03] text-xl">
         🍚
       </div>
       <p className="text-base font-medium text-ink">{title}</p>

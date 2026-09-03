@@ -27,7 +27,7 @@ export function TaskCard({ task, defaultOpen = false }: { task: Task; defaultOpe
           className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-md border transition-colors ${
             task.status === 'done'
               ? 'border-good bg-good/20 text-good'
-              : 'border-white/20 text-transparent hover:border-white/40'
+              : 'border-tint/20 text-transparent hover:border-tint/40'
           }`}
         >
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
@@ -64,7 +64,7 @@ export function TaskCard({ task, defaultOpen = false }: { task: Task; defaultOpe
       </div>
 
       {open && (
-        <div className="space-y-3 border-t border-hairline bg-white/[0.015] px-4 py-4">
+        <div className="space-y-3 border-t border-hairline bg-tint/[0.015] px-4 py-4">
           <div>
             <p className="section-title mb-1.5">Completion criteria</p>
             <p className="text-sm text-ink-soft">{task.completionCriteria}</p>

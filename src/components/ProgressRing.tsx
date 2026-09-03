@@ -29,7 +29,14 @@ export function ProgressRing({
   return (
     <div className="relative inline-grid place-items-center" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={stroke} />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          fill="none"
+          stroke="rgb(var(--c-tint) / 0.1)"
+          strokeWidth={stroke}
+        />
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -54,7 +61,7 @@ export function ProgressRing({
 export function ProgressBar({ value, tone = 'saffron' }: { value: number; tone?: Props['tone'] }) {
   const clamped = Math.max(0, Math.min(100, value));
   return (
-    <div className="h-2 w-full overflow-hidden rounded-full bg-white/[0.06]">
+    <div className="h-2 w-full overflow-hidden rounded-full bg-tint/[0.06]">
       <div
         className="h-full rounded-full transition-[width] duration-500"
         style={{ width: `${clamped}%`, background: TONE[tone ?? 'saffron'] }}

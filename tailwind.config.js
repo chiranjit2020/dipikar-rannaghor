@@ -8,22 +8,24 @@ export default {
         sans: ['Poppins', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       colors: {
-        // Dark-first premium palette
-        base: '#0b0b0f',
+        // Theme-aware tokens — values live in :root / :root.dark in index.css.
+        base: 'rgb(var(--c-base) / <alpha-value>)',
         surface: {
-          DEFAULT: '#141419',
-          2: '#1b1b22',
-          3: '#23232c',
+          DEFAULT: 'rgb(var(--c-surface) / <alpha-value>)',
+          2: 'rgb(var(--c-surface-2) / <alpha-value>)',
+          3: 'rgb(var(--c-surface-3) / <alpha-value>)',
         },
-        hairline: 'rgba(255,255,255,0.08)',
+        hairline: 'var(--hairline)',
         ink: {
-          DEFAULT: '#f4f4f5',
-          soft: '#a1a1aa',
-          muted: '#71717a',
+          DEFAULT: 'rgb(var(--c-ink) / <alpha-value>)',
+          soft: 'rgb(var(--c-ink-soft) / <alpha-value>)',
+          muted: 'rgb(var(--c-ink-muted) / <alpha-value>)',
         },
+        // Neutral overlay: white on dark, black on light. Use `tint/[0.04]` etc.
+        tint: 'rgb(var(--c-tint) / <alpha-value>)',
         saffron: {
           DEFAULT: '#f5a623',
-          soft: '#ffb84d',
+          soft: 'rgb(var(--c-saffron-soft) / <alpha-value>)',
           deep: '#e08600',
         },
         good: '#34d399',
@@ -36,7 +38,7 @@ export default {
         '2xl': '1.25rem',
       },
       boxShadow: {
-        card: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 8px 30px -12px rgba(0,0,0,0.6)',
+        card: 'var(--shadow-card)',
         glow: '0 0 0 1px rgba(245,166,35,0.25), 0 10px 40px -12px rgba(245,166,35,0.35)',
       },
       fontSize: {
