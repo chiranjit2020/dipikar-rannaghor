@@ -161,6 +161,9 @@ export class LocalStorageAdapter implements StorageAdapter {
       ingredients: await this.getList('ingredients'),
       suppliers: await this.getList('suppliers'),
       recipes: await this.getList('recipes'),
+      dailyLogs: await this.getList('dailyLogs'),
+      expenses: await this.getList('expenses'),
+      stockMoves: await this.getList('stockMoves'),
     };
   }
 
@@ -175,6 +178,9 @@ export class LocalStorageAdapter implements StorageAdapter {
     if (data.ingredients) write(KEYS.ingredients, data.ingredients);
     if (data.suppliers) write(KEYS.suppliers, data.suppliers);
     if (data.recipes) write(KEYS.recipes, data.recipes);
+    if (data.dailyLogs) write(KEYS.dailyLogs, data.dailyLogs);
+    if (data.expenses) write(KEYS.expenses, data.expenses);
+    if (data.stockMoves) write(KEYS.stockMoves, data.stockMoves);
   }
 
   async clearAll(): Promise<void> {

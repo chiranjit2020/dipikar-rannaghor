@@ -91,6 +91,21 @@ export function Settings() {
       <section className="card p-5">
         <h2 className="text-base font-medium text-ink">Preferences</h2>
         <label className="mt-3 flex items-center justify-between gap-4 text-sm">
+          <span className="text-ink-soft">
+            Platform commission %{' '}
+            <span className="text-ink-muted">(Finance P&L estimate)</span>
+          </span>
+          <input
+            type="number"
+            inputMode="decimal"
+            value={settings.platformCommissionPct}
+            onChange={(e) =>
+              void setSettings({ platformCommissionPct: parseFloat(e.target.value) || 0 })
+            }
+            className="field w-24"
+          />
+        </label>
+        <label className="mt-3 flex items-center justify-between gap-4 text-sm">
           <span className="text-ink-soft">Compact spacing</span>
           <input
             type="checkbox"

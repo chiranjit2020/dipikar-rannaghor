@@ -8,15 +8,17 @@ import { IconSearch } from './icons';
 
 export function SearchModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const navigate = useNavigate();
-  const { tasks, decisions, recipes, ingredients, suppliers } = useStore();
+  const { tasks, decisions, recipes, ingredients, suppliers, expenses } = useStore();
   const [q, setQ] = useState('');
   const [active, setActive] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const results = useMemo(
     () =>
-      open ? search(q, { tasks, decisions, recipes, ingredients, suppliers }) : [],
-    [q, open, tasks, decisions, recipes, ingredients, suppliers],
+      open
+        ? search(q, { tasks, decisions, recipes, ingredients, suppliers, expenses })
+        : [],
+    [q, open, tasks, decisions, recipes, ingredients, suppliers, expenses],
   );
 
   useEffect(() => {

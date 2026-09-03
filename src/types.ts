@@ -149,6 +149,8 @@ export interface Ingredient {
   /** ₹ per unit (per kg, per litre, per dozen, per piece, per packet). */
   price: number;
   supplierId?: string | null;
+  /** Inventory: reorder when stock on hand drops to/below this (in `unit`). 0 = off. */
+  reorderLevel?: number;
   notes?: string;
   updatedAt: string;
 }
@@ -202,8 +204,74 @@ export interface Recipe {
   updatedAt: string;
 }
 
+// --- V4: Operations tracking (daily log / expenses / inventory) -----------
+
+export interface DailyLog {
+  /** id === date (YYYY-MM-DD) so there is one row per day. */
+  id: string;
+  date: string;
+  ordersZomato: number;
+  ordersSwiggy: number;
+  ordersDirect: number;
+  /** Total menu value of the day's orders, before commission/discount. */
+  grossSales: number;
+  /** Your own funded discount (not platform-funded). */
+  discountOwn: number;
+  /** ₹ refunded or lost to cancellations. */
+  refunds: number;
+  complaints: number;
+  marketingSpend: number;
+  notes?: string;
+  updatedAt: string;
+}
+
+export type ExpenseCategory =
+  | 'Rent'
+  | 'Salary'
+  | 'Utilities'
+  | 'Ingredients / Purchase'
+  | 'Packaging'
+  | 'Equipment'
+  | 'Marketing'
+  | 'Platform / Ads'
+  | 'Licenses'
+  | 'Maintenance'
+  | 'Miscellaneous';
+
+export interface Expense {
+  id: string;
+  date: string;
+  category: ExpenseCategory;
+  amount: number;
+  vendor?: string;
+  recurring?: 'weekly' | 'monthly' | null;
+  notes?: string;
+  updatedAt: string;
+}
+
+export type StockMoveKind = 'purchase' | 'consumption' | 'wastage' | 'adjustment';
+
+export interface StockMove {
+  id: string;
+  date: string;
+  ingredientId: string;
+  kind: StockMoveKind;
+  /** Quantity in the ingredient's unit. Signed by `kind` at compute time. */
+  qty: number;
+  /** For purchases — ₹ per unit paid. */
+  costPerUnit?: number;
+  reason?: string;
+  updatedAt: string;
+}
+
 /** Keys for the generic list-collection storage API. */
-export type CollectionKey = 'ingredients' | 'suppliers' | 'recipes';
+export type CollectionKey =
+  | 'ingredients'
+  | 'suppliers'
+  | 'recipes'
+  | 'dailyLogs'
+  | 'expenses'
+  | 'stockMoves';
 
 // --- Search ---------------------------------------------------------------
 
@@ -215,6 +283,7 @@ export type SearchKind =
   | 'recipe'
   | 'ingredient'
   | 'supplier'
+  | 'expense'
   | 'calculator'
   | 'decision';
 

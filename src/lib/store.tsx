@@ -14,10 +14,13 @@ import { phases } from '../content/phases';
 import { taskSeeds } from '../content/todos';
 import type {
   CollectionKey,
+  DailyLog,
   DecisionEntry,
+  Expense,
   Ingredient,
   PhaseId,
   Recipe,
+  StockMove,
   Supplier,
   Task,
   TaskSeed,
@@ -63,6 +66,9 @@ interface StoreValue {
   ingredients: Ingredient[];
   suppliers: Supplier[];
   recipes: Recipe[];
+  dailyLogs: DailyLog[];
+  expenses: Expense[];
+  stockMoves: StockMove[];
   saveItem: <T extends { id: string }>(key: CollectionKey, item: T) => Promise<void>;
   saveItems: <T extends { id: string }>(key: CollectionKey, items: T[]) => Promise<void>;
   deleteItem: (key: CollectionKey, id: string) => Promise<void>;
@@ -99,9 +105,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [dailyLogs, setDailyLogs] = useState<DailyLog[]>([]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [stockMoves, setStockMoves] = useState<StockMove[]>([]);
 
   const refresh = useCallback(async () => {
-    const [ov, cu, cl, dp, de, se, ca, ing, sup, rec] = await Promise.all([
+    const [ov, cu, cl, dp, de, se, ca, ing, sup, rec, dl, ex, sm] = await Promise.all([
       storage.getTaskOverrides(),
       storage.getCustomTasks(),
       storage.getChecklistState(),
@@ -112,6 +121,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       storage.getList<Ingredient>('ingredients'),
       storage.getList<Supplier>('suppliers'),
       storage.getList<Recipe>('recipes'),
+      storage.getList<DailyLog>('dailyLogs'),
+      storage.getList<Expense>('expenses'),
+      storage.getList<StockMove>('stockMoves'),
     ]);
     setOverrides(ov);
     setCustom(cu);
@@ -123,6 +135,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setIngredients(ing);
     setSuppliers(sup);
     setRecipes(rec);
+    setDailyLogs(dl);
+    setExpenses(ex);
+    setStockMoves(sm);
     setReady(true);
   }, [storage]);
 
@@ -237,9 +252,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const applyLocal = useCallback(
     (key: CollectionKey, fn: (prev: { id: string }[]) => { id: string }[]) => {
-      if (key === 'ingredients') setIngredients((p) => fn(p) as Ingredient[]);
-      else if (key === 'suppliers') setSuppliers((p) => fn(p) as Supplier[]);
-      else setRecipes((p) => fn(p) as Recipe[]);
+      const setters: Record<CollectionKey, (fn: (p: never[]) => never[]) => void> = {
+        ingredients: setIngredients as never,
+        suppliers: setSuppliers as never,
+        recipes: setRecipes as never,
+        dailyLogs: setDailyLogs as never,
+        expenses: setExpenses as never,
+        stockMoves: setStockMoves as never,
+      };
+      setters[key]((p) => fn(p as { id: string }[]) as never);
     },
     [],
   );
@@ -304,6 +325,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     ingredients,
     suppliers,
     recipes,
+    dailyLogs,
+    expenses,
+    stockMoves,
     saveItem,
     saveItems,
     deleteItem,

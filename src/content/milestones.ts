@@ -36,15 +36,15 @@ export const roadmap: RoadmapVersion[] = [
   },
   {
     version: 'V4',
-    title: 'Order + Expense + Revenue',
-    status: 'next',
-    scope: ['Daily order log', 'Expense tracking', 'Revenue & payout reconciliation', 'Inventory: opening/purchase/consumption/closing'],
+    title: 'Daily Log + Expenses + Finance + Inventory',
+    status: 'current',
+    scope: ['Daily operations log (orders / sales / discount / refund)', 'Categorised expenses', 'Estimated P&L with break-even reference', 'Inventory: stock moves, on-hand, reorder alerts'],
   },
   {
     version: 'V5',
     title: 'Full Cloud Kitchen Business Tracker',
-    status: 'planned',
-    scope: ['Vercel + Supabase', 'Auth', 'Multi-device sync', 'Customer & review management'],
+    status: 'next',
+    scope: ['Vercel + Supabase', 'Auth', 'Multi-device sync', 'Recurring-expense auto-generate', 'Customer & review tracking'],
   },
   {
     version: 'V6',

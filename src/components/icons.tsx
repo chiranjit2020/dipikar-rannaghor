@@ -79,6 +79,18 @@ export const IconLeaf = (p: P) => (
 export const IconTruck = (p: P) => (
   <svg {...base(p)}><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z" /><circle cx="7" cy="18" r="1.6" /><circle cx="17" cy="18" r="1.6" /></svg>
 );
+export const IconWallet = (p: P) => (
+  <svg {...base(p)}><path d="M3 7a2 2 0 0 1 2-2h13v4M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4M3 7h16" /><circle cx="17" cy="13" r="1.4" fill="currentColor" /></svg>
+);
+export const IconChart = (p: P) => (
+  <svg {...base(p)}><path d="M4 20V4M4 20h16M8 16v-4M13 16V8M18 16v-6" /></svg>
+);
+export const IconBox = (p: P) => (
+  <svg {...base(p)}><path d="m3 8 9-5 9 5-9 5-9-5zM3 8v8l9 5 9-5V8M12 13v8" /></svg>
+);
+export const IconCalendar = (p: P) => (
+  <svg {...base(p)}><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M3 9h18M8 2v4M16 2v4" /></svg>
+);
 export const IconGrid = (p: P) => (
   <svg {...base(p)}><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" /></svg>
 );

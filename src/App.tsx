@@ -9,8 +9,12 @@ import { Dashboard } from './pages/Dashboard';
 import { DecisionLog } from './pages/DecisionLog';
 import { DocDetail } from './pages/DocDetail';
 import { DocsList } from './pages/DocsList';
+import { DailyLogPage } from './pages/DailyLogPage';
+import { Expenses } from './pages/Expenses';
+import { Finance } from './pages/Finance';
 import { Glossary } from './pages/Glossary';
 import { Ingredients } from './pages/Ingredients';
+import { Inventory } from './pages/Inventory';
 import { RecipeDetail } from './pages/RecipeDetail';
 import { Recipes } from './pages/Recipes';
 import { Resources } from './pages/Resources';
@@ -49,6 +53,10 @@ export default function App() {
               <Route path="ingredients" element={<Ingredients />} />
               <Route path="suppliers" element={<Suppliers />} />
               <Route path="calculators" element={<Calculators />} />
+              <Route path="daily" element={<DailyLogPage />} />
+              <Route path="expenses" element={<Expenses />} />
+              <Route path="finance" element={<Finance />} />
+              <Route path="inventory" element={<Inventory />} />
               <Route path="glossary" element={<Glossary />} />
               <Route path="decisions" element={<DecisionLog />} />
               <Route path="resources" element={<Resources />} />

@@ -19,12 +19,15 @@ export interface Settings {
   bnHeavy: boolean;
   compact: boolean;
   lastVisitedPhase?: string;
+  /** Estimate only — used for P&L commission projections. */
+  platformCommissionPct: number;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
   theme: 'dark',
   bnHeavy: true,
   compact: false,
+  platformCommissionPct: 22,
 };
 
 /** Storage keys — namespaced so a future multi-tenant Supabase row maps cleanly. */
@@ -39,6 +42,9 @@ export const KEYS = {
   ingredients: 'dr.ingredients',
   suppliers: 'dr.suppliers',
   recipes: 'dr.recipes',
+  dailyLogs: 'dr.dailyLogs',
+  expenses: 'dr.expenses',
+  stockMoves: 'dr.stockMoves',
 } as const;
 
 /** Maps a CollectionKey to its localStorage key. */
@@ -46,6 +52,9 @@ export const COLLECTION_KEYS = {
   ingredients: KEYS.ingredients,
   suppliers: KEYS.suppliers,
   recipes: KEYS.recipes,
+  dailyLogs: KEYS.dailyLogs,
+  expenses: KEYS.expenses,
+  stockMoves: KEYS.stockMoves,
 } as const;
 
-export const SCHEMA_VERSION = 2;
+export const SCHEMA_VERSION = 3;

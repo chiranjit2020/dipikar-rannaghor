@@ -4,6 +4,7 @@ import { glossary } from '../content/glossary';
 import { phaseById } from '../content/phases';
 import type {
   DecisionEntry,
+  Expense,
   Ingredient,
   Recipe,
   SearchResult,
@@ -92,6 +93,7 @@ export interface SearchDynamic {
   recipes: Recipe[];
   ingredients: Ingredient[];
   suppliers: Supplier[];
+  expenses: Expense[];
 }
 
 export function search(query: string, dynamic: SearchDynamic, limit = 24): SearchResult[] {
@@ -142,6 +144,14 @@ export function search(query: string, dynamic: SearchDynamic, limit = 24): Searc
         body: `${s.name} ${s.items.map((it) => it.item).join(' ')} ${s.notes ?? ''}`,
         to: '/suppliers',
       })),
+    ...dynamic.expenses.map<Indexable>((e) => ({
+      kind: 'expense',
+      id: e.id,
+      title: `${e.category} — ${e.vendor || e.date}`,
+      body: `${e.category} ${e.vendor ?? ''} ${e.notes ?? ''} ${e.amount}`,
+      to: '/expenses',
+      category: e.category,
+    })),
   ];
 
   const results: SearchResult[] = [];

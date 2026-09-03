@@ -5,7 +5,8 @@ import { ProgressBar, ProgressRing } from '../components/ProgressRing';
 import { TaskCard } from '../components/TaskCard';
 import { milestones } from '../content/milestones';
 import { phases } from '../content/phases';
-import { costRecipe, foodCostTone } from '../lib/costing';
+import { costRecipe, foodCostTone, rupee } from '../lib/costing';
+import { buildPnL, makePeriod, stockLevels } from '../lib/finance';
 import { PRIORITY_RANK, STATUS_LABEL } from '../lib/format';
 import {
   useCurrentPhase,
@@ -27,7 +28,8 @@ export function Dashboard() {
   const progress = useProgress();
   const phaseProgress = usePhaseProgress();
   const current = useCurrentPhase();
-  const { tasks, decisions, recipes, ingredients } = useStore();
+  const { tasks, decisions, recipes, ingredients, dailyLogs, expenses, stockMoves, settings } =
+    useStore();
 
   const ingredientById = Object.fromEntries(ingredients.map((i) => [i.id, i]));
   const recipeCostings = recipes.map((r) => costRecipe(r, ingredientById));
@@ -36,6 +38,10 @@ export function Dashboard() {
       ? recipeCostings.reduce((s, c) => s + c.foodCostPct, 0) / recipeCostings.length
       : 0;
   const heroCount = recipes.filter((r) => r.isHero).length;
+
+  const week = buildPnL(dailyLogs, expenses, makePeriod('last30'), settings.platformCommissionPct);
+  const lowStock = stockLevels(ingredients, stockMoves).filter((l) => l.low);
+  const hasOps = dailyLogs.length > 0 || expenses.length > 0;
 
   const currentPhaseMeta = phases.find((p) => p.id === current.phase);
   const currentMilestone = milestones.find((m) => m.id === currentPhaseMeta?.milestone);
@@ -171,6 +177,50 @@ export function Dashboard() {
           </ul>
         </div>
       </section>
+
+      {/* Low stock alert */}
+      {lowStock.length > 0 && (
+        <section className="card border-bad/25 bg-bad/[0.06] p-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-medium text-bad">⚠ {lowStock.length} item reorder level-এ</h3>
+            <Link to="/inventory" className="link text-xs">Inventory →</Link>
+          </div>
+          <p className="mt-1 text-sm text-ink-soft">
+            {lowStock.slice(0, 4).map((l) => l.ingredient.name).join(', ')}
+            {lowStock.length > 4 ? ` +${lowStock.length - 4}` : ''}
+          </p>
+        </section>
+      )}
+
+      {/* Operations snapshot */}
+      {hasOps && (
+        <section className="card p-5">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-medium text-ink">Last 30 days</h3>
+            <Link to="/finance" className="link text-xs">Finance →</Link>
+          </div>
+          <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <div>
+              <p className="text-[0.7rem] uppercase tracking-wider text-ink-muted">Orders</p>
+              <p className="text-xl font-semibold text-ink">{week.orders}</p>
+            </div>
+            <div>
+              <p className="text-[0.7rem] uppercase tracking-wider text-ink-muted">Gross sales</p>
+              <p className="text-xl font-semibold text-ink">{rupee(week.grossSales)}</p>
+            </div>
+            <div>
+              <p className="text-[0.7rem] uppercase tracking-wider text-ink-muted">AOV</p>
+              <p className="text-xl font-semibold text-ink">{rupee(Math.round(week.aov))}</p>
+            </div>
+            <div>
+              <p className="text-[0.7rem] uppercase tracking-wider text-ink-muted">Est. P/L</p>
+              <p className={`text-xl font-semibold ${week.estProfit >= 0 ? 'text-good' : 'text-bad'}`}>
+                {rupee(Math.round(week.estProfit))}
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Kitchen snapshot */}
       {recipes.length > 0 && (
