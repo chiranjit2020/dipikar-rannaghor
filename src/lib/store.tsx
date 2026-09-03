@@ -13,8 +13,12 @@ import { documents } from '../content/documents';
 import { phases } from '../content/phases';
 import { taskSeeds } from '../content/todos';
 import type {
+  CollectionKey,
   DecisionEntry,
+  Ingredient,
   PhaseId,
+  Recipe,
+  Supplier,
   Task,
   TaskSeed,
   TaskStatus,
@@ -56,6 +60,13 @@ interface StoreValue {
   calculatorState: CalculatorState;
   setCalculatorState: (id: string, value: unknown) => Promise<void>;
 
+  ingredients: Ingredient[];
+  suppliers: Supplier[];
+  recipes: Recipe[];
+  saveItem: <T extends { id: string }>(key: CollectionKey, item: T) => Promise<void>;
+  saveItems: <T extends { id: string }>(key: CollectionKey, items: T[]) => Promise<void>;
+  deleteItem: (key: CollectionKey, id: string) => Promise<void>;
+
   refresh: () => Promise<void>;
 }
 
@@ -85,9 +96,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [decisions, setDecisions] = useState<DecisionEntry[]>([]);
   const [settings, setSettingsState] = useState<Settings>(DEFAULT_SETTINGS);
   const [calculatorState, setCalcState] = useState<CalculatorState>({});
+  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+  const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
 
   const refresh = useCallback(async () => {
-    const [ov, cu, cl, dp, de, se, ca] = await Promise.all([
+    const [ov, cu, cl, dp, de, se, ca, ing, sup, rec] = await Promise.all([
       storage.getTaskOverrides(),
       storage.getCustomTasks(),
       storage.getChecklistState(),
@@ -95,6 +109,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       storage.getDecisions(),
       storage.getSettings(),
       storage.getCalculatorState(),
+      storage.getList<Ingredient>('ingredients'),
+      storage.getList<Supplier>('suppliers'),
+      storage.getList<Recipe>('recipes'),
     ]);
     setOverrides(ov);
     setCustom(cu);
@@ -103,6 +120,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setDecisions(de);
     setSettingsState(se);
     setCalcState(ca);
+    setIngredients(ing);
+    setSuppliers(sup);
+    setRecipes(rec);
     setReady(true);
   }, [storage]);
 
@@ -215,6 +235,53 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [storage],
   );
 
+  const applyLocal = useCallback(
+    (key: CollectionKey, fn: (prev: { id: string }[]) => { id: string }[]) => {
+      if (key === 'ingredients') setIngredients((p) => fn(p) as Ingredient[]);
+      else if (key === 'suppliers') setSuppliers((p) => fn(p) as Supplier[]);
+      else setRecipes((p) => fn(p) as Recipe[]);
+    },
+    [],
+  );
+
+  const saveItem = useCallback<StoreValue['saveItem']>(
+    async (key, item) => {
+      applyLocal(key, (prev) => {
+        const idx = prev.findIndex((x) => x.id === item.id);
+        if (idx < 0) return [...prev, item];
+        const next = [...prev];
+        next[idx] = item;
+        return next;
+      });
+      await storage.saveListItem(key, item);
+    },
+    [applyLocal, storage],
+  );
+
+  const saveItems = useCallback<StoreValue['saveItems']>(
+    async (key, items) => {
+      applyLocal(key, (prev) => {
+        const next = [...prev];
+        for (const item of items) {
+          const idx = next.findIndex((x) => x.id === item.id);
+          if (idx < 0) next.push(item);
+          else next[idx] = item;
+        }
+        return next;
+      });
+      await storage.saveListItems(key, items);
+    },
+    [applyLocal, storage],
+  );
+
+  const deleteItem = useCallback<StoreValue['deleteItem']>(
+    async (key, id) => {
+      applyLocal(key, (prev) => prev.filter((x) => x.id !== id));
+      await storage.deleteListItem(key, id);
+    },
+    [applyLocal, storage],
+  );
+
   const value: StoreValue = {
     ready,
     storageName: storage.name,
@@ -234,6 +301,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setSettings,
     calculatorState,
     setCalculatorState,
+    ingredients,
+    suppliers,
+    recipes,
+    saveItem,
+    saveItems,
+    deleteItem,
     refresh,
   };
 

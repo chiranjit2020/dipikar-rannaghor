@@ -51,6 +51,9 @@ const KIND_LABEL: Record<string, string> = {
   glossary: 'Glossary',
   calculator: 'Calculator',
   decision: 'Decision',
+  recipe: 'Recipe',
+  ingredient: 'Ingredient',
+  supplier: 'Supplier',
 };
 
 export function KindBadge({ kind }: { kind: string }) {

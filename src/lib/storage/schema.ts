@@ -36,6 +36,16 @@ export const KEYS = {
   decisions: 'dr.decisions',
   settings: 'dr.settings',
   calculators: 'dr.calculators',
+  ingredients: 'dr.ingredients',
+  suppliers: 'dr.suppliers',
+  recipes: 'dr.recipes',
 } as const;
 
-export const SCHEMA_VERSION = 1;
+/** Maps a CollectionKey to its localStorage key. */
+export const COLLECTION_KEYS = {
+  ingredients: KEYS.ingredients,
+  suppliers: KEYS.suppliers,
+  recipes: KEYS.recipes,
+} as const;
+
+export const SCHEMA_VERSION = 2;

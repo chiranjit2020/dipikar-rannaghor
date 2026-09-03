@@ -2,7 +2,14 @@ import { checklists } from '../content/checklists';
 import { documents } from '../content/documents';
 import { glossary } from '../content/glossary';
 import { phaseById } from '../content/phases';
-import type { DecisionEntry, SearchResult, Task } from '../types';
+import type {
+  DecisionEntry,
+  Ingredient,
+  Recipe,
+  SearchResult,
+  Supplier,
+  Task,
+} from '../types';
 import { excerpt } from './format';
 
 interface Indexable {
@@ -79,11 +86,15 @@ function scoreOf(hay: string, title: string, terms: string[]): number {
   return score;
 }
 
-export function search(
-  query: string,
-  dynamic: { tasks: Task[]; decisions: DecisionEntry[] },
-  limit = 24,
-): SearchResult[] {
+export interface SearchDynamic {
+  tasks: Task[];
+  decisions: DecisionEntry[];
+  recipes: Recipe[];
+  ingredients: Ingredient[];
+  suppliers: Supplier[];
+}
+
+export function search(query: string, dynamic: SearchDynamic, limit = 24): SearchResult[] {
   const q = query.trim().toLowerCase();
   if (q.length < 2) return [];
   const terms = q.split(/\s+/).filter(Boolean);
@@ -105,6 +116,32 @@ export function search(
       body: `${d.decision} ${d.reason}`,
       to: `/decisions#${d.id}`,
     })),
+    ...dynamic.recipes.map<Indexable>((r) => ({
+      kind: 'recipe',
+      id: r.id,
+      title: r.name || 'Untitled recipe',
+      body: `${r.name} ${r.lines.map((l) => l.label).join(' ')} ${r.sopNotes ?? ''}`,
+      to: `/recipes/${r.id}`,
+      category: r.isHero ? 'Hero' : 'Recipe',
+    })),
+    ...dynamic.ingredients
+      .filter((i) => i.name.trim())
+      .map<Indexable>((i) => ({
+        kind: 'ingredient',
+        id: i.id,
+        title: i.name,
+        body: `${i.name} ${i.unit} ${i.notes ?? ''}`,
+        to: '/ingredients',
+      })),
+    ...dynamic.suppliers
+      .filter((s) => s.name.trim())
+      .map<Indexable>((s) => ({
+        kind: 'supplier',
+        id: s.id,
+        title: s.name,
+        body: `${s.name} ${s.items.map((it) => it.item).join(' ')} ${s.notes ?? ''}`,
+        to: '/suppliers',
+      })),
   ];
 
   const results: SearchResult[] = [];

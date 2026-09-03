@@ -10,9 +10,13 @@ import { DecisionLog } from './pages/DecisionLog';
 import { DocDetail } from './pages/DocDetail';
 import { DocsList } from './pages/DocsList';
 import { Glossary } from './pages/Glossary';
+import { Ingredients } from './pages/Ingredients';
+import { RecipeDetail } from './pages/RecipeDetail';
+import { Recipes } from './pages/Recipes';
 import { Resources } from './pages/Resources';
 import { Roadmap } from './pages/Roadmap';
 import { Settings } from './pages/Settings';
+import { Suppliers } from './pages/Suppliers';
 import { Todos } from './pages/Todos';
 
 function Gate({ children }: { children: React.ReactNode }) {
@@ -40,6 +44,10 @@ export default function App() {
               <Route path="roadmap" element={<Roadmap />} />
               <Route path="todo" element={<Todos />} />
               <Route path="checklists" element={<Checklists />} />
+              <Route path="recipes" element={<Recipes />} />
+              <Route path="recipes/:id" element={<RecipeDetail />} />
+              <Route path="ingredients" element={<Ingredients />} />
+              <Route path="suppliers" element={<Suppliers />} />
               <Route path="calculators" element={<Calculators />} />
               <Route path="glossary" element={<Glossary />} />
               <Route path="decisions" element={<DecisionLog />} />

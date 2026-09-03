@@ -5,6 +5,7 @@ import { ProgressBar, ProgressRing } from '../components/ProgressRing';
 import { TaskCard } from '../components/TaskCard';
 import { milestones } from '../content/milestones';
 import { phases } from '../content/phases';
+import { costRecipe, foodCostTone } from '../lib/costing';
 import { PRIORITY_RANK, STATUS_LABEL } from '../lib/format';
 import {
   useCurrentPhase,
@@ -26,7 +27,15 @@ export function Dashboard() {
   const progress = useProgress();
   const phaseProgress = usePhaseProgress();
   const current = useCurrentPhase();
-  const { tasks, decisions } = useStore();
+  const { tasks, decisions, recipes, ingredients } = useStore();
+
+  const ingredientById = Object.fromEntries(ingredients.map((i) => [i.id, i]));
+  const recipeCostings = recipes.map((r) => costRecipe(r, ingredientById));
+  const avgFoodCostPct =
+    recipeCostings.length > 0
+      ? recipeCostings.reduce((s, c) => s + c.foodCostPct, 0) / recipeCostings.length
+      : 0;
+  const heroCount = recipes.filter((r) => r.isHero).length;
 
   const currentPhaseMeta = phases.find((p) => p.id === current.phase);
   const currentMilestone = milestones.find((m) => m.id === currentPhaseMeta?.milestone);
@@ -162,6 +171,36 @@ export function Dashboard() {
           </ul>
         </div>
       </section>
+
+      {/* Kitchen snapshot */}
+      {recipes.length > 0 && (
+        <section className="card p-5">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-medium text-ink">Kitchen</h3>
+            <Link to="/recipes" className="link text-xs">Recipes →</Link>
+          </div>
+          <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <div>
+              <p className="text-[0.7rem] uppercase tracking-wider text-ink-muted">Recipes</p>
+              <p className="text-xl font-semibold text-ink">{recipes.length}</p>
+            </div>
+            <div>
+              <p className="text-[0.7rem] uppercase tracking-wider text-ink-muted">Hero</p>
+              <p className="text-xl font-semibold text-ink">{heroCount}</p>
+            </div>
+            <div>
+              <p className="text-[0.7rem] uppercase tracking-wider text-ink-muted">Ingredients</p>
+              <p className="text-xl font-semibold text-ink">{ingredients.length}</p>
+            </div>
+            <div>
+              <p className="text-[0.7rem] uppercase tracking-wider text-ink-muted">Avg Food Cost %</p>
+              <p className={`text-xl font-semibold ${foodCostTone(avgFoodCostPct)}`}>
+                {avgFoodCostPct.toFixed(0)}%
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Recent decisions */}
       {decisions.length > 0 && (

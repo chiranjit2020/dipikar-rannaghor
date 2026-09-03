@@ -1,6 +1,7 @@
-import type { TaskSeed } from '../../types';
+import type { CollectionKey, TaskSeed } from '../../types';
 import type { StorageAdapter } from './types';
 import {
+  COLLECTION_KEYS,
   DEFAULT_SETTINGS,
   KEYS,
   SCHEMA_VERSION,
@@ -121,6 +122,31 @@ export class LocalStorageAdapter implements StorageAdapter {
     write(KEYS.calculators, all);
   }
 
+  async getList<T = unknown>(key: CollectionKey): Promise<T[]> {
+    return read<T[]>(COLLECTION_KEYS[key], []);
+  }
+
+  async saveListItem<T extends { id: string }>(key: CollectionKey, item: T): Promise<void> {
+    await this.saveListItems(key, [item]);
+  }
+
+  async saveListItems<T extends { id: string }>(key: CollectionKey, items: T[]): Promise<void> {
+    const all = await this.getList<T>(key);
+    for (const item of items) {
+      const idx = all.findIndex((x) => x.id === item.id);
+      if (idx >= 0) all[idx] = item;
+      else all.push(item);
+    }
+    write(COLLECTION_KEYS[key], all);
+  }
+
+  async deleteListItem(key: CollectionKey, id: string): Promise<void> {
+    write(
+      COLLECTION_KEYS[key],
+      (await this.getList<{ id: string }>(key)).filter((x) => x.id !== id),
+    );
+  }
+
   async exportAll(): Promise<Record<string, unknown>> {
     return {
       schemaVersion: SCHEMA_VERSION,
@@ -132,6 +158,9 @@ export class LocalStorageAdapter implements StorageAdapter {
       decisions: await this.getDecisions(),
       settings: await this.getSettings(),
       calculators: await this.getCalculatorState(),
+      ingredients: await this.getList('ingredients'),
+      suppliers: await this.getList('suppliers'),
+      recipes: await this.getList('recipes'),
     };
   }
 
@@ -143,6 +172,9 @@ export class LocalStorageAdapter implements StorageAdapter {
     if (data.decisions) write(KEYS.decisions, data.decisions);
     if (data.settings) write(KEYS.settings, data.settings);
     if (data.calculators) write(KEYS.calculators, data.calculators);
+    if (data.ingredients) write(KEYS.ingredients, data.ingredients);
+    if (data.suppliers) write(KEYS.suppliers, data.suppliers);
+    if (data.recipes) write(KEYS.recipes, data.recipes);
   }
 
   async clearAll(): Promise<void> {

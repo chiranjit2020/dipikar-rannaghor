@@ -25,20 +25,20 @@ export const roadmap: RoadmapVersion[] = [
   {
     version: 'V2',
     title: 'Calculators + Decision Log + Progress',
-    status: 'next',
+    status: 'current',
     scope: ['Break-even calculator', 'Food cost calculator', 'Decision Log', 'Learning vs Execution progress', 'Local persistence hardening'],
   },
   {
     version: 'V3',
-    title: 'Recipe + Inventory + Supplier',
-    status: 'planned',
-    scope: ['Recipe & ingredient DB', 'Supplier comparison', 'Inventory: opening/purchase/consumption/closing'],
+    title: 'Recipe + Ingredient + Supplier',
+    status: 'current',
+    scope: ['Ingredient library (price/unit/supplier)', 'Recipe costing from library', 'Supplier records + item comparison', 'Recipe → Decision Log'],
   },
   {
     version: 'V4',
     title: 'Order + Expense + Revenue',
-    status: 'planned',
-    scope: ['Daily order log', 'Expense tracking', 'Revenue & payout reconciliation'],
+    status: 'next',
+    scope: ['Daily order log', 'Expense tracking', 'Revenue & payout reconciliation', 'Inventory: opening/purchase/consumption/closing'],
   },
   {
     version: 'V5',

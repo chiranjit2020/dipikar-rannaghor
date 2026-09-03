@@ -5,8 +5,8 @@ import { useCurrentPhase, useProgress } from '../lib/store';
 import { Brand } from './Brand';
 import { ProgressBar } from './ProgressRing';
 import { SearchModal } from './SearchModal';
-import { MOBILE_NAV, NAV } from './nav';
-import { IconSearch } from './icons';
+import { MOBILE_NAV, NAV, NAV_GROUPS } from './nav';
+import { IconClose, IconGrid, IconSearch } from './icons';
 
 function DesktopSidebar() {
   const progress = useProgress();
@@ -18,23 +18,32 @@ function DesktopSidebar() {
         <Brand />
       </div>
 
-      <nav className="flex-1 space-y-1 overflow-y-auto px-3">
-        {NAV.map(({ to, label, icon: Icon, end }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={end}
-            className={({ isActive }) =>
-              `flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
-                isActive
-                  ? 'bg-saffron/12 text-saffron-soft'
-                  : 'text-ink-soft hover:bg-white/[0.04] hover:text-ink'
-              }`
-            }
-          >
-            <Icon className="h-[18px] w-[18px]" />
-            {label}
-          </NavLink>
+      <nav className="flex-1 space-y-4 overflow-y-auto px-3 pb-4">
+        {NAV_GROUPS.map((g) => (
+          <div key={g}>
+            <p className="px-3 pb-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-ink-muted">
+              {g}
+            </p>
+            <div className="space-y-0.5">
+              {NAV.filter((n) => n.group === g).map(({ to, label, icon: Icon, end }) => (
+                <NavLink
+                  key={to}
+                  to={to}
+                  end={end}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition-colors ${
+                      isActive
+                        ? 'bg-saffron/12 text-saffron-soft'
+                        : 'text-ink-soft hover:bg-white/[0.04] hover:text-ink'
+                    }`
+                  }
+                >
+                  <Icon className="h-[18px] w-[18px]" />
+                  {label}
+                </NavLink>
+              ))}
+            </div>
+          </div>
         ))}
       </nav>
 
@@ -64,7 +73,46 @@ function DesktopSidebar() {
   );
 }
 
-function MobileTabBar() {
+function MoreSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-40 flex flex-col bg-base/95 backdrop-blur-md lg:hidden">
+      <div className="flex items-center justify-between border-b border-hairline px-4 py-3">
+        <Brand />
+        <button onClick={onClose} className="btn-subtle p-2" aria-label="Close">
+          <IconClose className="h-5 w-5" />
+        </button>
+      </div>
+      <nav className="flex-1 space-y-5 overflow-y-auto p-4">
+        {NAV_GROUPS.map((g) => (
+          <div key={g}>
+            <p className="section-title mb-2">{g}</p>
+            <div className="grid grid-cols-2 gap-2">
+              {NAV.filter((n) => n.group === g).map(({ to, label, icon: Icon, end }) => (
+                <NavLink
+                  key={to}
+                  to={to}
+                  end={end}
+                  onClick={onClose}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 rounded-xl border border-hairline px-3 py-3 text-sm font-medium ${
+                      isActive ? 'bg-saffron/12 text-saffron-soft' : 'bg-surface-2/50 text-ink-soft'
+                    }`
+                  }
+                >
+                  <Icon className="h-[18px] w-[18px]" />
+                  {label}
+                </NavLink>
+              ))}
+            </div>
+          </div>
+        ))}
+      </nav>
+    </div>
+  );
+}
+
+function MobileTabBar({ onMore }: { onMore: () => void }) {
   return (
     <nav className="fixed inset-x-0 bottom-0 z-30 flex border-t border-hairline bg-surface/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-lg lg:hidden">
       {MOBILE_NAV.map(({ to, label, short, icon: Icon, end }) => (
@@ -82,12 +130,20 @@ function MobileTabBar() {
           <span className="max-w-full truncate">{short ?? label}</span>
         </NavLink>
       ))}
+      <button
+        onClick={onMore}
+        className="flex min-w-0 flex-1 flex-col items-center gap-1 py-2.5 text-[0.68rem] font-medium text-ink-muted"
+      >
+        <IconGrid className="h-[20px] w-[20px]" />
+        <span>More</span>
+      </button>
     </nav>
   );
 }
 
 export function AppShell() {
   const [searchOpen, setSearchOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -103,9 +159,12 @@ export function AppShell() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    setMoreOpen(false);
   }, [pathname]);
 
-  const title = NAV.find((n) => (n.end ? n.to === pathname : pathname.startsWith(n.to)))?.label;
+  const title = [...NAV]
+    .sort((a, b) => b.to.length - a.to.length)
+    .find((n) => (n.end ? n.to === pathname : pathname.startsWith(n.to)))?.label;
 
   return (
     <div className="min-h-dvh overflow-x-hidden lg:pl-64">
@@ -134,7 +193,8 @@ export function AppShell() {
         <Outlet />
       </main>
 
-      <MobileTabBar />
+      <MobileTabBar onMore={() => setMoreOpen(true)} />
+      <MoreSheet open={moreOpen} onClose={() => setMoreOpen(false)} />
       <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </div>
   );

@@ -138,6 +138,73 @@ export interface DecisionEntry {
   createdAt: string;
 }
 
+// --- V3: Kitchen data (recipes / ingredients / suppliers) -----------------
+
+export type IngredientUnit = 'kg' | 'litre' | 'dozen' | 'piece' | 'packet';
+
+export interface Ingredient {
+  id: string;
+  name: string;
+  unit: IngredientUnit;
+  /** ₹ per unit (per kg, per litre, per dozen, per piece, per packet). */
+  price: number;
+  supplierId?: string | null;
+  notes?: string;
+  updatedAt: string;
+}
+
+export interface SupplierItem {
+  id: string;
+  item: string;
+  price: number;
+  unit: string;
+  quality?: string;
+  moq?: string;
+  deliveryDays?: string;
+}
+
+export interface Supplier {
+  id: string;
+  name: string;
+  contact?: string;
+  paymentTerms?: string;
+  /** 1 (poor) – 5 (excellent). */
+  reliability: number;
+  isBackup?: boolean;
+  notes?: string;
+  items: SupplierItem[];
+  updatedAt: string;
+}
+
+export interface RecipeLine {
+  id: string;
+  /** Ref into the ingredient library; null = ad-hoc line with manualCost. */
+  ingredientId: string | null;
+  label: string;
+  /** grams/ml when the ingredient is priced per kg/litre; otherwise a count. */
+  qty: number;
+  manualCost?: number;
+}
+
+export interface Recipe {
+  id: string;
+  name: string;
+  isHero?: boolean;
+  lines: RecipeLine[];
+  sellingPrice: number;
+  packagingCost: number;
+  commissionPct: number;
+  overheadCost: number;
+  prepMinutes?: number;
+  cookMinutes?: number;
+  targetMarginPct?: number;
+  sopNotes?: string;
+  updatedAt: string;
+}
+
+/** Keys for the generic list-collection storage API. */
+export type CollectionKey = 'ingredients' | 'suppliers' | 'recipes';
+
 // --- Search ---------------------------------------------------------------
 
 export type SearchKind =
@@ -145,6 +212,9 @@ export type SearchKind =
   | 'task'
   | 'checklist'
   | 'glossary'
+  | 'recipe'
+  | 'ingredient'
+  | 'supplier'
   | 'calculator'
   | 'decision';
 

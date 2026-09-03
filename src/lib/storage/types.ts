@@ -40,6 +40,19 @@ export interface StorageAdapter {
   getCalculatorState(): Promise<CalculatorState>;
   setCalculatorState(id: string, value: unknown): Promise<void>;
 
+  /** Generic list collections (ingredients, suppliers, recipes). */
+  getList<T = unknown>(key: import('../../types').CollectionKey): Promise<T[]>;
+  saveListItem<T extends { id: string }>(
+    key: import('../../types').CollectionKey,
+    item: T,
+  ): Promise<void>;
+  /** Upsert many items in one read-merge-write (avoids races on bulk insert). */
+  saveListItems<T extends { id: string }>(
+    key: import('../../types').CollectionKey,
+    items: T[],
+  ): Promise<void>;
+  deleteListItem(key: import('../../types').CollectionKey, id: string): Promise<void>;
+
   /** Full export/import for backup + future migration to the cloud. */
   exportAll(): Promise<Record<string, unknown>>;
   importAll(data: Record<string, unknown>): Promise<void>;

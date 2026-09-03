@@ -70,6 +70,18 @@ export const IconPlus = (p: P) => (
 export const IconTrash = (p: P) => (
   <svg {...base(p)}><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /></svg>
 );
+export const IconRecipe = (p: P) => (
+  <svg {...base(p)}><path d="M12 3a5 5 0 0 0-5 5c0 1.8 1 3 2 4l-1 9h8l-1-9c1-1 2-2.2 2-4a5 5 0 0 0-5-5z" /><path d="M9 8h6" /></svg>
+);
+export const IconLeaf = (p: P) => (
+  <svg {...base(p)}><path d="M11 20A7 7 0 0 1 4 13c0-5 5-9 16-9 0 8-3 15-9 16z" /><path d="M8 17c2-4 5-7 9-9" /></svg>
+);
+export const IconTruck = (p: P) => (
+  <svg {...base(p)}><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z" /><circle cx="7" cy="18" r="1.6" /><circle cx="17" cy="18" r="1.6" /></svg>
+);
+export const IconGrid = (p: P) => (
+  <svg {...base(p)}><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" /></svg>
+);
 export const IconDownload = (p: P) => (
   <svg {...base(p)}><path d="M12 3v12M7 10l5 5 5-5M5 21h14" /></svg>
 );

@@ -6,10 +6,13 @@ import {
   IconDashboard,
   IconDocs,
   IconFlag,
+  IconLeaf,
   IconLink,
   IconList,
+  IconRecipe,
   IconRoadmap,
   IconSettings,
+  IconTruck,
 } from './icons';
 
 export interface NavItem {
@@ -18,22 +21,28 @@ export interface NavItem {
   short?: string;
   icon: ComponentType<SVGProps<SVGSVGElement>>;
   end?: boolean;
+  group: 'Plan' | 'Kitchen' | 'Reference';
 }
 
 export const NAV: NavItem[] = [
-  { to: '/', label: 'Dashboard', icon: IconDashboard, end: true },
-  { to: '/docs', label: 'Documentation', short: 'Docs', icon: IconDocs },
-  { to: '/roadmap', label: 'Roadmap', icon: IconRoadmap },
-  { to: '/todo', label: 'TODO', icon: IconList },
-  { to: '/checklists', label: 'Checklists', short: 'Checks', icon: IconCheckSquare },
-  { to: '/calculators', label: 'Calculators', short: 'Calc', icon: IconCalc },
-  { to: '/glossary', label: 'Glossary', icon: IconBook },
-  { to: '/decisions', label: 'Decision Log', icon: IconFlag },
-  { to: '/resources', label: 'Resources', icon: IconLink },
-  { to: '/settings', label: 'Settings', icon: IconSettings },
+  { to: '/', label: 'Dashboard', icon: IconDashboard, end: true, group: 'Plan' },
+  { to: '/docs', label: 'Documentation', short: 'Docs', icon: IconDocs, group: 'Plan' },
+  { to: '/roadmap', label: 'Roadmap', icon: IconRoadmap, group: 'Plan' },
+  { to: '/todo', label: 'TODO', icon: IconList, group: 'Plan' },
+  { to: '/checklists', label: 'Checklists', short: 'Checks', icon: IconCheckSquare, group: 'Plan' },
+
+  { to: '/recipes', label: 'Recipes', icon: IconRecipe, group: 'Kitchen' },
+  { to: '/ingredients', label: 'Ingredients', icon: IconLeaf, group: 'Kitchen' },
+  { to: '/suppliers', label: 'Suppliers', icon: IconTruck, group: 'Kitchen' },
+  { to: '/calculators', label: 'Calculators', short: 'Calc', icon: IconCalc, group: 'Kitchen' },
+
+  { to: '/glossary', label: 'Glossary', icon: IconBook, group: 'Reference' },
+  { to: '/decisions', label: 'Decision Log', icon: IconFlag, group: 'Reference' },
+  { to: '/resources', label: 'Resources', icon: IconLink, group: 'Reference' },
+  { to: '/settings', label: 'Settings', icon: IconSettings, group: 'Reference' },
 ];
 
-/** Bottom bar keeps the 5 highest-traffic destinations. */
-export const MOBILE_NAV = NAV.filter((n) =>
-  ['/', '/docs', '/todo', '/checklists', '/calculators'].includes(n.to),
-);
+export const NAV_GROUPS = ['Plan', 'Kitchen', 'Reference'] as const;
+
+/** Bottom bar keeps 4 high-traffic destinations; a 5th "More" opens the rest. */
+export const MOBILE_NAV = NAV.filter((n) => ['/', '/docs', '/todo', '/recipes'].includes(n.to));
