@@ -107,22 +107,25 @@ export function RecipeDetail() {
           <p className="section-title">Ingredients</p>
           <span className="text-xs text-ink-muted">Food cost {rupee(c.foodCost)}</span>
         </div>
-        <div className="hidden grid-cols-[1.4fr_1fr_5rem_6rem_2rem] gap-2 px-1 pb-1 text-[0.7rem] uppercase tracking-wider text-ink-muted sm:grid">
+        <div className="hidden grid-cols-[1.4fr_1fr_5rem_6rem_2.25rem] gap-2 px-1 pb-1 text-[0.7rem] uppercase tracking-wider text-ink-muted sm:grid">
           <span>Ingredient</span><span>Library link</span><span>Qty (g / ct)</span><span>Line cost</span><span />
         </div>
         <div className="space-y-2">
           {r.lines.map((l) => {
             const linked = l.ingredientId ? ingredientById[l.ingredientId] : undefined;
             return (
-              <div key={l.id} className="grid grid-cols-2 gap-2 sm:grid-cols-[1.4fr_1fr_5rem_6rem_2rem] sm:items-center">
+              <div
+                key={l.id}
+                className="rounded-xl border border-hairline bg-tint/[0.02] p-2 sm:grid sm:grid-cols-[1.4fr_1fr_5rem_6rem_2.25rem] sm:items-center sm:gap-2 sm:border-0 sm:bg-transparent sm:p-0"
+              >
                 <input
                   className="field"
-                  placeholder="Label"
+                  placeholder="Ingredient label"
                   value={l.label}
                   onChange={(e) => setLine(l.id, { label: e.target.value })}
                 />
                 <select
-                  className="field sm:px-2"
+                  className="field mt-2 sm:mt-0 sm:px-2"
                   value={l.ingredientId ?? ''}
                   onChange={(e) => {
                     const ing = ingredients.find((x) => x.id === e.target.value);
@@ -137,31 +140,37 @@ export function RecipeDetail() {
                     <option key={i.id} value={i.id}>{i.name || 'Unnamed'} ({i.unit})</option>
                   ))}
                 </select>
-                <input
-                  className="field"
-                  type="number"
-                  inputMode="decimal"
-                  value={l.qty}
-                  onChange={(e) => setLine(l.id, { qty: parseFloat(e.target.value) || 0 })}
-                />
-                {linked ? (
-                  <span className="text-sm text-ink-soft">{rupee(lineCost(l, ingredientById))}</span>
-                ) : (
+                <div className="mt-2 grid grid-cols-[1fr_1fr_auto] items-center gap-2 sm:contents sm:mt-0">
                   <input
                     className="field"
                     type="number"
                     inputMode="decimal"
-                    placeholder="₹ manual"
-                    value={l.manualCost ?? 0}
-                    onChange={(e) => setLine(l.id, { manualCost: parseFloat(e.target.value) || 0 })}
+                    placeholder="Qty"
+                    value={l.qty}
+                    onChange={(e) => setLine(l.id, { qty: parseFloat(e.target.value) || 0 })}
                   />
-                )}
-                <button
-                  onClick={() => save({ lines: r.lines.filter((x) => x.id !== l.id) })}
-                  className="justify-self-end text-ink-muted hover:text-bad"
-                >
-                  <IconTrash className="h-4 w-4" />
-                </button>
+                  {linked ? (
+                    <span className="flex h-10 items-center justify-end px-1 text-sm text-ink-soft sm:h-auto sm:justify-start sm:px-0">
+                      {rupee(lineCost(l, ingredientById))}
+                    </span>
+                  ) : (
+                    <input
+                      className="field"
+                      type="number"
+                      inputMode="decimal"
+                      placeholder="₹ cost"
+                      value={l.manualCost ?? 0}
+                      onChange={(e) => setLine(l.id, { manualCost: parseFloat(e.target.value) || 0 })}
+                    />
+                  )}
+                  <button
+                    aria-label="Remove line"
+                    onClick={() => save({ lines: r.lines.filter((x) => x.id !== l.id) })}
+                    className="grid h-10 w-10 place-items-center rounded-xl text-ink-muted hover:bg-tint/5 hover:text-bad"
+                  >
+                    <IconTrash className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
             );
           })}

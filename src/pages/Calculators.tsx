@@ -234,24 +234,55 @@ function FoodCost({ initial }: { initial?: Partial<FoodCostState> }) {
       </p>
 
       <div className="mt-4 space-y-2">
-        <div className="hidden grid-cols-[1fr_5rem_6rem_4rem_2rem] gap-2 px-1 text-[0.7rem] uppercase tracking-wider text-ink-muted sm:grid">
+        <div className="hidden grid-cols-[1fr_5rem_6rem_4.5rem_2.25rem] gap-2 px-1 text-[0.7rem] uppercase tracking-wider text-ink-muted sm:grid">
           <span>Ingredient</span><span>Qty</span><span>Unit cost</span><span>/kg?</span><span />
         </div>
         {s.rows.map((r) => (
-          <div key={r.id} className="grid grid-cols-2 gap-2 sm:grid-cols-[1fr_5rem_6rem_4rem_2rem]">
-            <input className="field" placeholder="নাম" value={r.name} onChange={(e) => update(r.id, { name: e.target.value })} />
-            <input className="field" type="number" value={r.qty} onChange={(e) => update(r.id, { qty: parseFloat(e.target.value) || 0 })} />
-            <input className="field" type="number" value={r.unitCost} onChange={(e) => update(r.id, { unitCost: parseFloat(e.target.value) || 0 })} />
-            <label className="flex items-center justify-center rounded-xl border border-hairline bg-surface-2/60">
-              <input type="checkbox" checked={r.perKg} onChange={(e) => update(r.id, { perKg: e.target.checked })} className="h-4 w-4 accent-saffron" />
-            </label>
-            <button
-              type="button"
-              onClick={() => setS((p) => ({ ...p, rows: p.rows.filter((x) => x.id !== r.id) }))}
-              className="grid place-items-center text-ink-muted hover:text-bad"
-            >
-              <IconTrash className="h-4 w-4" />
-            </button>
+          <div
+            key={r.id}
+            className="rounded-xl border border-hairline bg-tint/[0.02] p-2 sm:grid sm:grid-cols-[1fr_5rem_6rem_4.5rem_2.25rem] sm:items-center sm:gap-2 sm:border-0 sm:bg-transparent sm:p-0"
+          >
+            <input
+              className="field"
+              placeholder="Ingredient নাম"
+              value={r.name}
+              onChange={(e) => update(r.id, { name: e.target.value })}
+            />
+            <div className="mt-2 grid grid-cols-[1fr_1fr_auto_auto] items-center gap-2 sm:contents sm:mt-0">
+              <input
+                className="field"
+                type="number"
+                inputMode="decimal"
+                placeholder="Qty"
+                value={r.qty}
+                onChange={(e) => update(r.id, { qty: parseFloat(e.target.value) || 0 })}
+              />
+              <input
+                className="field"
+                type="number"
+                inputMode="decimal"
+                placeholder="₹/unit"
+                value={r.unitCost}
+                onChange={(e) => update(r.id, { unitCost: parseFloat(e.target.value) || 0 })}
+              />
+              <label className="flex h-10 items-center justify-center gap-1 rounded-xl border border-hairline bg-surface-2/60 px-2 text-xs text-ink-muted">
+                <input
+                  type="checkbox"
+                  checked={r.perKg}
+                  onChange={(e) => update(r.id, { perKg: e.target.checked })}
+                  className="h-4 w-4 accent-saffron"
+                />
+                <span className="sm:hidden">/kg</span>
+              </label>
+              <button
+                type="button"
+                aria-label="Remove ingredient"
+                onClick={() => setS((p) => ({ ...p, rows: p.rows.filter((x) => x.id !== r.id) }))}
+                className="grid h-10 w-10 place-items-center rounded-xl text-ink-muted hover:bg-tint/5 hover:text-bad"
+              >
+                <IconTrash className="h-4 w-4" />
+              </button>
+            </div>
           </div>
         ))}
         <button
